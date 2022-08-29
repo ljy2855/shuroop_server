@@ -16,6 +16,24 @@ class Place(models.Model):
     is_empty = models.BooleanField()
     is_full = models.BooleanField()
     description = models.CharField(max_length=30)
+    def borrow_item(self):
+        self.umbrella_count = self.umbrella_count -1
+        self.save()
+
+    def return_item(self):
+        self.umbrella_count = self.umbrella_count + 1
+        self.save()
+
+    def save(self, *args, **kwargs):
+        if self.max_count is self.umbrella_count:
+            self.is_full = True
+        else:
+            self.is_full = False
+        if self.umbrella_count is 0:
+            self.is_empty = True
+        else:
+            self.is_empty = False
+        super(Place, self).save(*args, **kwargs)
 
 class Record(models.Model):
     user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=False)
