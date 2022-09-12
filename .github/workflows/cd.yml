@@ -30,6 +30,7 @@ jobs:
           name: id_rsa-target
           known_hosts: ${{ secrets.HOST }} # will be appended to existing .ssh/known_hosts
       
+      - run: ls /home/runner/.ssh/
       
       - name: Deploy and Run
         uses: appleboy/ssh-action@master
@@ -37,7 +38,7 @@ jobs:
           host: ${{secrets.HOST}}
           username : ${{secrets.USER}}
           port : ${{secrets.PORT}}
-          key: ${{ secrets.KEY }}
+          key: /home/runner/.ssh
           script: |
             cd ${{secrets.PATH}}
             git pull origin release
