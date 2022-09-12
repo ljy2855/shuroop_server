@@ -23,6 +23,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
+      - name: Install SSH key of target
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.KEY }}
+          name: id_rsa-target
+          known_hosts: ${{ secrets.HOST }} # will be appended to existing .ssh/known_hosts
+      
+      
       - name: Deploy and Run
         uses: appleboy/ssh-action@master
         with:
