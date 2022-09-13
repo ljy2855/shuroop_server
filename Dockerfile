@@ -23,4 +23,3 @@ RUN chmod +x /Workspace/entrypoint.sh
 
 ENTRYPOINT [ "/Workspace/entrypoint.sh" ]
 
-EXPOSE 8000

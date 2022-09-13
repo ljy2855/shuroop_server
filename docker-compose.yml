@@ -5,14 +5,27 @@ services:
     build: .
     volumes:
       - static_volunme:/Workspace/static
-    command: gunicorn shuroop.asgi:application -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+    command: gunicorn shuroop.wsgi:application -w 4 --bind 0.0.0.0:8000
     ports:
       - 8000:8000
     env_file:
       - ./.env
     depends_on:
       - db
+    expose:
+      - 8000
+
+  asgi:
+    build: .
+    command: gunicorn shuroop.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:9000
+    ports:
+      - 9000:9000
+    env_file:
+      - ./.env
+    depends_on:
       - redis
+    expose:
+      - 9000
 
   db:
     image: postgres:13.0-alpine

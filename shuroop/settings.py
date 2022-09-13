@@ -26,8 +26,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ec2-13-209-88-53.ap-northeast-2.compute.amazonaws.com","127.0.0.1","0.0.0.0"]
-
+#ALLOWED_HOSTS = ["ec2-13-209-88-53.ap-northeast-2.compute.amazonaws.com","127.0.0.1","0.0.0.0"]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
 
@@ -82,11 +82,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shuroop.wsgi.application'
 ASGI_APPLICATION = 'shuroop.asgi.application'
+
+# CACHES = {
+#     "default" : {
+#         "BACKEND" : "django_redis.cache.RedisCache",
+#         "LOCATION" : "redis://redis_boot:6379/1",
+#         "OPTIONS" : {
+#             "CLIENT_CLASS" : "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis://redis_boot', 6379)],
         },
     },
 }
