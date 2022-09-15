@@ -8,7 +8,6 @@ from devices.signal import borrow_signal, return_signal
 from rentals.models import Place
 from rentals.serializers import PlaceSerializer
 from users.models import Profile
-from asgiref.sync import sync_to_async
 
 @api_view(['GET'])
 def get_all_places(request):
@@ -34,12 +33,12 @@ def borrow_umbrella(request,id):
         asyncio.run(borrow_signal(place_id=id))
         #TODO User 정보 업데이트
         place.borrow_item()
+        profile.borrow_umbrella()
         serializer = PlaceSerializer(place)
         return Response(serializer.data,status=200)
     else:
         return Response(status=404)
 
-@sync_to_async
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
@@ -51,9 +50,9 @@ def return_umbrella(request,id):
         if place.is_full :
            return Response(status=201, data={'message' : '대여소가 가득찼아요'})
 
-        #TODO 대여소 디바이스 연동 파트
-        asyncio.run(return_signal(place_id=id))
+        asyncio.run(return_signal(place_id=id)) 
         #TODO User 정보 업데이트
+        profile.return_umbrella()
         place.return_item()
 
         serializer = PlaceSerializer(place)

@@ -1,7 +1,8 @@
-from calendar import month_name
+import datetime
 from django.db import models
 
 from users.models import Profile
+
 
 class Position(models.Model):
     latitude = models.CharField(max_length=20)
@@ -42,8 +43,18 @@ class Record(models.Model):
     borrow_place = models.ForeignKey(Place,on_delete=models.SET_NULL,null=True,related_name='borrow_place')
     return_time = models.DateTimeField()
     return_place = models.ForeignKey(Place,on_delete=models.SET_NULL,null=True,related_name='return_place')
-    over_time = models.DurationField()
+    over_time = models.DurationField(default=datetime.timedelta())
     charge = models.IntegerField(default=0)
+
+    def close_rental(self,place):
+        self.is_renting = False
+        self.return_time = datetime.datetime.now()
+        self.return_place = place
+        rental_time = self.return_time - self.borrow_time
+        if rental_time > datetime.timedelta(day=1):
+            self.over_time = rental_time - datetime.timedelta(day=1)
+        self.save()
+
 
 
 

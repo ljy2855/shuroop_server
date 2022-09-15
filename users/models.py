@@ -6,10 +6,18 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 import datetime
 
+
 class Profile(models.Model):
     user_id = models.OneToOneField(User,on_delete=models.CASCADE,related_name="user",primary_key=True) #장고 내장 User 사용
     is_renting = models.BooleanField(default=False)
     left_time = models.DurationField(default=datetime.timedelta())
+    
+    def borrow_umbrella(self):
+        self.is_renting = True
+
+    def return_umbrella(self):
+        self.is_renting = False
+        
     ## left_money -> 이건 left_time만 해도 충분할듯?
 
 
