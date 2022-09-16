@@ -12,6 +12,7 @@ services:
       - ./.env
     depends_on:
       - db
+      - asgi
     expose:
       - 8000
 
