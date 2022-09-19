@@ -28,9 +28,9 @@ jobs:
         with:
           host: ${{secrets.HOST}}
           username : ${{secrets.USER}}
+          password : ${{secrets.PASSWORD}}
           port : ${{secrets.PORT}}
-          key: ${{ secrets.KEY }}
           script: |
             cd ${{secrets.PATH}}
-            git pull origin release
-            sh cd.sh
+            docker-compose down
+            docker-compose up --build -d
