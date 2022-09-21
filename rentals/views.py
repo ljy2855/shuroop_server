@@ -1,12 +1,13 @@
 import asyncio
+import datetime
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.shortcuts import get_object_or_404
 from devices.signal import borrow_signal, return_signal
-from rentals.models import Place
-from rentals.serializers import PlaceSerializer
+from rentals.models import Place, Record
+from rentals.serializers import PlaceSerializer, RecordSerializer
 from users.models import Profile
 
 @api_view(['GET'])
@@ -34,6 +35,9 @@ def borrow_umbrella(request,id):
         #TODO User 정보 업데이트
         place.borrow_item()
         profile.borrow_umbrella()
+        #TODO record create
+        Record.objects.create(borrow_place=place,user=profile)
+        
         serializer = PlaceSerializer(place)
         return Response(serializer.data,status=200)
     else:
@@ -54,8 +58,9 @@ def return_umbrella(request,id):
         #TODO User 정보 업데이트
         profile.return_umbrella()
         place.return_item()
-
-        serializer = PlaceSerializer(place)
+        record = get_object_or_404(Record,user=profile,is_renting=True)
+        record.close_rental(place=place)
+        serializer = RecordSerializer(record)
         return Response(serializer.data,status=200)
     else:
         return Response(status=404)
