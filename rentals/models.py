@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 
+
 from users.models import Profile
 
 
@@ -46,7 +47,7 @@ class Record(models.Model):
     over_time = models.DurationField(default=datetime.timedelta())
     charge = models.IntegerField(default=0)
 
-    def close_rental(self,place):
+    def close_rental(self,place) -> None:
         self.is_renting = False
         self.return_time = datetime.datetime.now()
         self.return_place = place
@@ -55,6 +56,13 @@ class Record(models.Model):
             self.over_time = rental_time - datetime.timedelta(day=1)
         self.save()
 
+    def get_borrow_time_format(self) -> str:
+        return self.borrow_time.strftime("%-m월 %-d일 %A %p %-H시 %-M분")
+
+    def check_over_time(self) ->bool:
+        if self.over_time > datetime.timedelta():
+            return True
+        return False
 
 
 

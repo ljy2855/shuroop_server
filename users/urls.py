@@ -6,4 +6,5 @@ urlpatterns = [
     path('check/token/',views.check_token),
     path('sign-up/',views.sign_up),
     path('check/id/',views.check_id),
+    path('pay/',views.pay),
 ]

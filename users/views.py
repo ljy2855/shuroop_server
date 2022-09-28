@@ -63,6 +63,24 @@ def check_id(request):
     get_object_or_404(User,username=id)
     return Response(status=200)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def pay(request):
+    user = request.user
+    if user is not None:
+        try:
+            time = request.data['day']
+            profile = get_object_or_404(Profile,user_id=user)
+            profile.add_rent_time(time)
+            
+        except Exception as e:
+            print(e)
+            return Response(status=401)    
+        return Response(status=200)
+    else:
+        return Response(status=404)
+
 # class LoginView(APIView):
 #     def post(self, request):
 #         

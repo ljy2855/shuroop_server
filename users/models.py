@@ -14,9 +14,16 @@ class Profile(models.Model):
     
     def borrow_umbrella(self):
         self.is_renting = True
+        self.save()
 
     def return_umbrella(self):
         self.is_renting = False
+        self.save()
+
+    def add_rent_time(self, time:float):
+        add_time = datetime.timedelta(days=time)
+        self.left_time = self.left_time + add_time
+        self.save()
         
     ## left_money -> 이건 left_time만 해도 충분할듯?
 
