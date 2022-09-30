@@ -4,7 +4,8 @@ name: Code Deploy to AWS
 
 # Controls when the workflow will run
 on:
-
+  push:
+    branches: [ "release"]
   pull_request:
     branches: [ "release" ]
 
