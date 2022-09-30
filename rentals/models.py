@@ -40,9 +40,9 @@ class Place(models.Model):
 class Record(models.Model):
     user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=False)
     is_renting = models.BooleanField(default=True)
-    borrow_time = models.DateTimeField(auto_created=True)
+    borrow_time = models.DateTimeField(auto_now_add=True)
     borrow_place = models.ForeignKey(Place,on_delete=models.SET_NULL,null=True,related_name='borrow_place')
-    return_time = models.DateTimeField()
+    return_time = models.DateTimeField(null=True)
     return_place = models.ForeignKey(Place,on_delete=models.SET_NULL,null=True,related_name='return_place')
     over_time = models.DurationField(default=datetime.timedelta())
     charge = models.IntegerField(default=0)
