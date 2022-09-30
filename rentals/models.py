@@ -1,6 +1,6 @@
 import datetime
 from django.db import models
-
+from django.utils import timezone
 
 from users.models import Profile
 
@@ -27,7 +27,7 @@ class Place(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        if self.max_count is self.umbrella_count:
+        if self.max_count == self.umbrella_count:
             self.is_full = True
         else:
             self.is_full = False
@@ -49,11 +49,11 @@ class Record(models.Model):
 
     def close_rental(self,place) -> None:
         self.is_renting = False
-        self.return_time = datetime.datetime.now()
+        self.return_time = timezone.now()
         self.return_place = place
         rental_time = self.return_time - self.borrow_time
-        if rental_time > datetime.timedelta(day=1):
-            self.over_time = rental_time - datetime.timedelta(day=1)
+        if rental_time > datetime.timedelta(days=1):
+            self.over_time = rental_time - datetime.timedelta(days=1)
         self.save()
 
     def get_borrow_time_format(self) -> str:
