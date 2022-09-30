@@ -16,15 +16,15 @@ class NoticeType(models.TextChoices):
 
 class Notification(models.Model):
     notice_type = models.CharField(max_length=20,choices=NoticeType.choices,default=None)
-    content = models.CharField(max_length=50,)
+    content = models.TextField(max_length=50,)
     profile_id = models.ForeignKey(Profile,on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_created=True)
+    created = models.DateTimeField(auto_now_add=True)
 
 @receiver(post_save,sender=Record)
 def create_rental_notice(sender, instance, created, **kwargs):
     if created == True: #대여 시
         record = instance
-        borrow_time_format = record.get_borrow_time_foramt()
+        borrow_time_format = record.get_borrow_time_format()
         content = borrow_time_format+"에 대여했어요! 24시간 내로 반납하는 것을 잊지 마세요."
         Notification.objects.create(
             notice_type=NoticeType.NEW_RENTAL,
