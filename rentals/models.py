@@ -18,6 +18,7 @@ class Place(models.Model):
     is_empty = models.BooleanField()
     is_full = models.BooleanField()
     description = models.CharField(max_length=30)
+
     def borrow_item(self):
         self.umbrella_count = self.umbrella_count -1
         self.save()
@@ -31,7 +32,7 @@ class Place(models.Model):
             self.is_full = True
         else:
             self.is_full = False
-        if self.umbrella_count is 0:
+        if self.umbrella_count == 0:
             self.is_empty = True
         else:
             self.is_empty = False
@@ -64,7 +65,13 @@ class Record(models.Model):
             return True
         return False
 
+class CurrentSearchPlace(models.Model):
+    user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=False)
+    search_place = models.ForeignKey(Place,on_delete=models.CASCADE,null=False,related_name='search_place')
 
+class FavoritePlace(models.Model):
+    user = models.ForeignKey(Profile,on_delete=models.CASCADE,null=False)
+    favorite_place = models.ForeignKey(Place,on_delete=models.CASCADE,null=False,related_name='favorite_place')
 
 
 # Create your models here.
