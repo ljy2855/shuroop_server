@@ -21,6 +21,8 @@ def login_with_password(request):
         pwd = request.data['password']
         
         user = authenticate(username=id, password=pwd)
+        if user is None:
+            return Response(status=401)
         
         token,created= Token.objects.get_or_create(user=user)
         print(token)
