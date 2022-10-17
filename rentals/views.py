@@ -143,8 +143,8 @@ def remove_searched_place(request,id):
     user = request.user
     if user is not None:
         profile = get_object_or_404(Profile,user_id=user)
-        
-        place = get_object_or_404(CurrentSearchPlace,id=id,user=profile).delete()
+        place = get_object_or_404(Place,id=id)
+        get_object_or_404(CurrentSearchPlace,search_place=place,user=profile).delete()
         return Response(status=200)
     return Response(status=401)
 
@@ -155,8 +155,9 @@ def remove_favorite_place(request,id):
     user = request.user
     if user is not None:
         profile = get_object_or_404(Profile,user_id=user)
+        place = get_object_or_404(Place,id=id)
         
-        place = get_object_or_404(FavoritePlace,id=id,user=profile).delete()
+        get_object_or_404(FavoritePlace,favorite_place=place,user=profile).delete()
         return Response(status=200)
     return Response(status=401)
 
